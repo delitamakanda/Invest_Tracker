@@ -1,0 +1,13 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1>Répartition du portefeuille : {{ portfolio.name }}</h1>
+
+  {% if chart %}
+    <img src="data:image/png;base64,{{ chart }}" alt="Portfolio">
+  {% else %}
+    <p>Aucun graphique disponible.</p>
+  {% endif %}
+
+  <p><a href="/admin/core/portfolio/">Retour aux portefeuilles</a></p>
+{% endblock %}
