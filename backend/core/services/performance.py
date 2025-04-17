@@ -1,6 +1,6 @@
 import yfinance as yf
 
-def get_current_market_price(ticker: object) -> str:
+def get_current_market_price(ticker: object) -> float:
     try:
         price = yf.Ticker(ticker)
         return  price.history(period="1d")['Close'].iloc[-1]
@@ -11,6 +11,6 @@ def get_current_market_price(ticker: object) -> str:
 def calculate_portfolio_value(portfolio):
     total_value = 0
     for position in portfolio.positions.all():
-        market_price = get_current_market_price(position.asset.ticker)
-        total_value += position.quantity * market_price
+        market_price = get_current_market_price(position.asset.ticker) if position.asset.ticker else float(position.price_at_buy * position.quantity)
+        total_value += float(position.quantity) * market_price
     return total_value

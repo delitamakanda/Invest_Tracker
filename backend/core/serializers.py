@@ -14,5 +14,12 @@ class AssetSerializer:
 class PositionSerializer:
     @staticmethod
     def serialize(instance):
-        return model_to_dict(instance, fields=['id', 'portfolio', 'asset', 'quantity', 'price_at_buy', 'date'])
+        return {
+            'id': instance.id,
+            'asset': instance.asset.name,
+            'ticker': instance.asset.ticker,
+            'quantity': float(instance.quantity),
+            'price_at_buy': float(instance.price_at_buy),
+            'date': instance.date.isoformat() if instance.date else None,
+        }
 
