@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+import pandas as pd
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Q
 from django.views import View
 from django.conf import settings
@@ -17,6 +18,15 @@ from .services.performance import calculate_portfolio_value
 ## POST /positions/
 ## GET /portfolios/{id}/value/
 ## UPDATE /portfolios/{id}/positions/{position_id}/
+
+def export_positions_to_csv(request):
+    positions = Position.objects.all().select_related("asset")
+    df = pd.DataFrame(PositionSerializer.serialize(pos) for pos in positions)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = "attachment; filename=positions.csv"
+    df.to_csv(response, index=False)
+    return response
+    
 
 
 @require_GET
