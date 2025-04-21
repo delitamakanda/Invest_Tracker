@@ -27,12 +27,15 @@ class CustomPortfolioAdmin(admin.ModelAdmin):
 
         labels = list(data.keys())
         values = list(data.values())
+        
+        total = sum(values)
+        legend_labels = [f"{label}: {round(value/total*100, 1)}% ({int(value)}€)" for label, value in zip(labels, values)]
 
         fig, ax = plt.subplots(figsize=(6, 6))
         wedges, texts, autotexts = ax.pie(values, autopct="%1.1f%%", startangle=90)
         ax.axis("equal")
         
-        ax.legend(wedges, labels, title="Type d'actifs", loc="center left", bbox_to_anchor=(1, 0.5))
+        ax.legend(wedges, legend_labels, title="Type d'actifs", loc="center left", bbox_to_anchor=(1, 0.5))
 
         buf = io.BytesIO()
         plt.savefig(buf, format="png", bbox_inches="tight")
