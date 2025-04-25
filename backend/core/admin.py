@@ -23,13 +23,13 @@ class CustomPortfolioAdmin(admin.ModelAdmin):
 
         for pos in positions:
             type_ = pos.asset.type
-            data[type_] = data.get(type_, 0) + float(pos.quantity)
+            data[type_] = data.get(type_, 0) + (float(pos.quantity) * float(pos.price_at_buy))
 
         labels = list(data.keys())
         values = list(data.values())
         
         total = sum(values)
-        legend_labels = [f"{label}: {round(value/total*100, 1)}% ({int(value)}€)" for label, value in zip(labels, values)]
+        legend_labels = [f"{label}: {round(value/total*100, 2)}% ({int(value)}€)" for label, value in zip(labels, values)]
 
         fig, ax = plt.subplots(figsize=(6, 6))
         wedges, texts, autotexts = ax.pie(values, autopct="%1.1f%%", startangle=90)
