@@ -19,6 +19,11 @@ from .services.performance import calculate_portfolio_value
 ## GET /portfolios/{id}/value/
 ## UPDATE /portfolios/{id}/positions/{position_id}/
 
+@require_GET
+def health_check(request):
+    return JsonResponse({"status": "ok"})
+
+
 def export_positions_to_csv(request):
     positions = Position.objects.all().select_related("asset")
     df = pd.DataFrame(PositionSerializer.serialize(pos) for pos in positions)
