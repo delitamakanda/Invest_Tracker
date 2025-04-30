@@ -30,7 +30,11 @@ jobs:
             --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
-            --platform managed
+            --platform managed \
+            --update-env-vars \
+              DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}, \
+              DEBUG=${{ secrets.DEBUG }}, \
+              ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} \
 
   deploy-frontend:
     name: Deploy Frontend
