@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY backend/ ./backend/
+COPY / ./backend/
 COPY manage.py .
 
 CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8080"]
