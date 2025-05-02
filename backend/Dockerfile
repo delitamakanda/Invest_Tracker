@@ -15,4 +15,6 @@ RUN python manage.py collectstatic --noinput || true
 
 RUN python manage.py migrate
 
+RUN python manage.py makesuperuser
+
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "backend.wsgi:application"]
