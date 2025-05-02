@@ -33,7 +33,7 @@ jobs:
             --platform managed \
             --update-env-vars \
               "DJANGO_SECRET_KEY='${{ secrets.DJANGO_SECRET_KEY }}', \
-              DEBUG='${{ secrets.DEBUG }}', \
+              DEBUG=${{ secrets.DEBUG }}, \
               ALLOWED_HOSTS='${{ secrets.ALLOWED_HOSTS }}'" \
 
   deploy-frontend:
@@ -64,4 +64,4 @@ jobs:
             --allow-unauthenticated \
             --platform managed \
             --update-env-vars \
-              "DEBUG='${{ secrets.DEBUG }}'" \
+              DEBUG=${{ secrets.DEBUG }} \
