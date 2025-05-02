@@ -34,7 +34,7 @@ jobs:
             --update-env-vars \
               "DJANGO_SECRET_KEY='${{ secrets.DJANGO_SECRET_KEY }}', \
               DEBUG=${{ secrets.DEBUG }}, \
-              ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" \
+              ALLOWED_HOSTS='${{ secrets.ALLOWED_HOSTS }}''" \
 
   deploy-frontend:
     name: Deploy Frontend
