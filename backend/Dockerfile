@@ -15,6 +15,8 @@ RUN python manage.py collectstatic --noinput
 
 RUN mkdir -p /app/media
 
+RUN mkdir -p /app/staticfiles
+
 RUN ls -la staticfiles
 
 RUN python manage.py migrate
