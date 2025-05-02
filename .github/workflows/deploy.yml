@@ -62,4 +62,6 @@ jobs:
             --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-ui \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
-            --platform managed
+            --platform managed \
+            --update-env-vars \
+              "DEBUG='${{ secrets.DEBUG }}'" \
