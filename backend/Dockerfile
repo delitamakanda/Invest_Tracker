@@ -11,9 +11,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY / .
 COPY manage.py .
 
-RUN python manage.py collectstatic
+RUN python manage.py collectstatic --noinput
 
 RUN mkdir -p /app/media
+
+RUN ls -la staticfiles
 
 RUN python manage.py migrate
 
