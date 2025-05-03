@@ -31,7 +31,7 @@ jobs:
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
             --platform managed \
-            --update-env-vars="DJANGO_SECRET_KEY='${{ secrets.DJANGO_SECRET_KEY }}',DEBUG=${{ secrets.DEBUG }},ALLOWED_HOSTS=invest-api-946790860424.europe-west9.run.app,invest-ui-946790860424.europe-west9.run.app"
+            --update-env-vars="DJANGO_SECRET_KEY='${{ secrets.DJANGO_SECRET_KEY }}',DEBUG=${{ secrets.DEBUG }}"
 
   deploy-frontend:
     name: Deploy Frontend
