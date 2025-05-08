@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY', default='your-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['invest-api-946790860424.europe-west9.run.app','invest-ui-946790860424.europe-west9.run.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -161,6 +161,3 @@ LOGGING['loggers']['django.request'] = {
     'level': 'DEBUG',
     'propagate': True,
 }
-
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
