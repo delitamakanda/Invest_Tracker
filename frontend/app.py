@@ -3,9 +3,8 @@ import streamlit as st
 import pandas as pd
 import requests
 
-API_URL = "http://localhost:8000/api"
-if not os.getenv("DEBUG") or os.getenv("DEBUG") == "False":
-    API_URL = "https://invest-api-946790860424.europe-west9.run.app/api"
+# API_URL = "http://localhost:8000/api"
+API_URL = "https://invest-api-946790860424.europe-west9.run.app/api"
 PORTFOLIO_ID = 1
 
 st.set_page_config(page_title="Portfolio Management", layout="wide")
