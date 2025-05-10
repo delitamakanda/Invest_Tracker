@@ -24,6 +24,12 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           install_components: 'beta'
 
+      - name: Debug env vars
+        run: |
+          echo "DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}"
+          echo "DEBUG: ${{ secrets.DEBUG }}"
+          echo "ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}"
+
       - name: Build & Deploy API
         run: |
           DJANGO_SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}"
