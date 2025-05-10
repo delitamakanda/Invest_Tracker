@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}"
           echo "DEBUG: ${{ secrets.DEBUG }}"
-          echo "ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}"
+          echo "ALLOWED_HOSTS: 'invest-ui-946790860424.europe-west9.run.app,invest-api-946790860424.europe-west9.run.app'"
 
       - name: Build & Deploy API
         run: |
@@ -51,7 +51,12 @@ jobs:
             --allow-unauthenticated \
             --platform managed \
             --add-cloudsql-instances=${{secrets.INSTANCE_CONNECTION_NAME}} \
-            --update-env-vars="DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY',DEBUG='$DEBUG',ALLOWED_HOSTS='$ALLOWED_HOSTS',DB_NAME='$DB_NAME',DB_USER='$DB_USER',DB_PASSWORD='$DB_PASSWORD',INSTANCE_CONNECTION_NAME='$INSTANCE_CONNECTION_NAME',GCS_STATIC_BUCKET='$GCS_STATIC_BUCKET',GCS_MEDIA_BUCKET='GCS_MEDIA_BUCKET',DJANGO_SETTINGS_MODULE='DJANGO_SETTINGS_MODULE',DB_PORT='DB_PORT',DB_PORT='DB_PORT'"
+            --set-env-vars="^|^DJANGO_SECRET_KEY='$DJANGO_SECRET_KEY'|DEBUG=$DEBUG|DB_NAME=$DB_NAME|DB_USER=$DB_USER|DB_PASSWORD=$DB_PASSWORD|INSTANCE_CONNECTION_NAME='$INSTANCE_CONNECTION_NAME'|GCS_STATIC_BUCKET='$GCS_STATIC_BUCKET'|GCS_MEDIA_BUCKET='$GCS_MEDIA_BUCKET'|DJANGO_SETTINGS_MODULE='$DJANGO_SETTINGS_MODULE'|DB_PORT=$DB_PORT|ALLOWED_HOSTS=$ALLOWED_HOSTS"
+
+      - name: Debug env vars
+        run: |
+          echo "ALLOWED_HOSTS='$ALLOWED_HOSTS'"
+          echo "ALLOWED_HOSTS length: ${#ALLOWED_HOSTS}"
 
   deploy-frontend:
     name: Deploy Frontend

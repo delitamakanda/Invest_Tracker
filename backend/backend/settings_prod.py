@@ -3,7 +3,7 @@ from settings import *
 
 from settings import config, BASE_DIR
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=lambda v: [s.strip() for s in v.split(",")])
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
 
 # static files cloud storage
 STATIC_URL = f"https://storage.googleapis.com/{config('GCS_STATIC_BUCKET')}/static/"
