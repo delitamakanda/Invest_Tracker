@@ -1,7 +1,7 @@
 import os
-from settings import *
 
-from settings import config, BASE_DIR
+from backend.backend.settings import *
+from decouple import config
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
 
