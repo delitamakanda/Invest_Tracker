@@ -1,0 +1,16 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: django-superuser
+spec:
+  template:
+    template:
+      spec:
+        containers:
+          - image: gcr.io/${{ secrets.GCP_PROJECT }}/invest-api
+            command:
+              - python
+              - manage.py
+              - makesuperuser
+        serviceAccountName: [SERVICE_ACCOUNT_EMAIL]
+        timeoutSeconds: 600

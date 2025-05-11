@@ -61,15 +61,25 @@ jobs:
 
       - name: Run Django migrations on Cloud Run
         run: |
-          gcloud run exec invest-api \
-            --region ${{ secrets.GCP_REGION }} \
-            --command "python manage.py migrate"
+          gcloud run jobs create django-migrations \
+          --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
+          --region ${{ secrets.GCP_REGION }} \
+          --command "python" \
+          --args "manage.py", "migrate" \
+          --max-retries 1 \
+          --timeout 600s \
+          --wait
 
       - name: Run makesuperuser script on Cloud Run
         run: |
-          gcloud run exec invest-api \
-            --region ${{ secrets.GCP_REGION }} \
-            --command "python manage.py makesuperuser"
+          gcloud run jobs create django-superuser \
+          --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
+          --region ${{ secrets.GCP_REGION }} \
+          --command "python" \
+          --args "manage.py", "makesuperuser" \
+          --max-retries 1 \
+          --timeout 600s \
+          --wait
 
   deploy-frontend:
     name: Deploy Frontend

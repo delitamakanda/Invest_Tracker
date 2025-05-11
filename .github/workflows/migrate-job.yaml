@@ -1,0 +1,16 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: django-migrations
+spec:
+  template:
+    template:
+      spec:
+        containers:
+          - image: gcr.io/${{ secrets.GCP_PROJECT }}/invest-api
+            command:
+              - python
+              - manage.py
+              - migrate
+        serviceAccountName: [SERVICE_ACCOUNT_EMAIL]
+        timeoutSeconds: 600
