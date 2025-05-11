@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -23,4 +23,4 @@ RUN python manage.py migrate
 
 RUN python manage.py makesuperuser
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "backend.wsgi:application"]
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8080"]
