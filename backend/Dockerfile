@@ -24,4 +24,5 @@ RUN python manage.py migrate
 
 RUN python manage.py makesuperuser
 
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8080"]
+CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8080", "--log-level=debug"]
+
