@@ -59,6 +59,18 @@ jobs:
           echo "ALLOWED_HOSTS='$ALLOWED_HOSTS'"
           echo "ALLOWED_HOSTS length: ${#ALLOWED_HOSTS}"
 
+      - name: Run Django migrations on Cloud Run
+        run: |
+          gcloud run exec invest-api \
+            --region ${{ secrets.GCP_REGION }} \
+            --command "python manage.py migrate"
+
+      - name: Run makesuperuser script on Cloud Run
+        run: |
+          gcloud run exec invest-api \
+            --region ${{ secrets.GCP_REGION }} \
+            --command "python manage.py makesuperuser"
+
   deploy-frontend:
     name: Deploy Frontend
     runs-on: ubuntu-latest
