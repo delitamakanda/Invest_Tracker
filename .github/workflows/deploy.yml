@@ -64,8 +64,7 @@ jobs:
           gcloud run jobs create django-migrations \
           --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
           --region ${{ secrets.GCP_REGION }} \
-          --command "python" \
-          --args "manage.py", "migrate" \
+          --command "python manage.py migrate" \
           --max-retries 1 \
           --task-timeout 600s \
           --wait
@@ -75,8 +74,7 @@ jobs:
           gcloud run jobs create django-superuser \
           --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
           --region ${{ secrets.GCP_REGION }} \
-          --command "python" \
-          --args "manage.py", "makesuperuser" \
+          --command "python manage.py manage.py" \
           --max-retries 1 \
           --task-timeout 600s \
           --wait
