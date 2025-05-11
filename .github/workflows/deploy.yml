@@ -67,7 +67,7 @@ jobs:
           --command "python" \
           --args "manage.py", "migrate" \
           --max-retries 1 \
-          --timeout 600s \
+          --task-timeout 600s \
           --wait
 
       - name: Run makesuperuser script on Cloud Run
@@ -78,7 +78,7 @@ jobs:
           --command "python" \
           --args "manage.py", "makesuperuser" \
           --max-retries 1 \
-          --timeout 600s \
+          --task-timeout 600s \
           --wait
 
   deploy-frontend:
