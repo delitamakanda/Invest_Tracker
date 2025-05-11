@@ -6,11 +6,11 @@ ENV PYTHONPATH="/app/backend"
 
 WORKDIR /app
 
+COPY / .
+COPY manage.py .
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-COPY backend/ ./backend/
-COPY manage.py .
 
 RUN python manage.py collectstatic --noinput
 
