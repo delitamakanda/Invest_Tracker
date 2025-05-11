@@ -26,4 +26,4 @@ DATABASES = {
     }
 }
 
-ADMIN_EMAIL = config('ADMIN_EMAIL')
+ADMIN_EMAIL = config('ADMIN_EMAIL', default='admin@example.com')

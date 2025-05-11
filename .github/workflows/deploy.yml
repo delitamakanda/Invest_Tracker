@@ -43,6 +43,7 @@ jobs:
           GCS_MEDIA_BUCKET="${{ secrets.GCS_MEDIA_BUCKET }}"
           DJANGO_SETTINGS_MODULE="${{ secrets.DJANGO_SETTINGS_MODULE }}"
           DB_PORT="${{ secrets.DB_PORT }}"
+          ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}"
           
           gcloud builds submit ./backend --tag gcr.io/${{ secrets.GCP_PROJECT }}/invest-api --project=${{ secrets.GCP_PROJECT }}
           gcloud run deploy invest-api \
@@ -51,7 +52,7 @@ jobs:
             --allow-unauthenticated \
             --platform managed \
             --add-cloudsql-instances=${{secrets.INSTANCE_CONNECTION_NAME}} \
-            --set-env-vars="^|^DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY|DEBUG=$DEBUG|DB_NAME=$DB_NAME|DB_USER=$DB_USER|DB_PASSWORD=$DB_PASSWORD|INSTANCE_CONNECTION_NAME=$INSTANCE_CONNECTION_NAME|GCS_STATIC_BUCKET=$GCS_STATIC_BUCKET|GCS_MEDIA_BUCKET=$GCS_MEDIA_BUCKET|DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE|DB_PORT=$DB_PORT|ALLOWED_HOSTS=$ALLOWED_HOSTS"
+            --set-env-vars="^|^DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY|DEBUG=$DEBUG|DB_NAME=$DB_NAME|DB_USER=$DB_USER|DB_PASSWORD=$DB_PASSWORD|INSTANCE_CONNECTION_NAME=$INSTANCE_CONNECTION_NAME|GCS_STATIC_BUCKET=$GCS_STATIC_BUCKET|GCS_MEDIA_BUCKET=$GCS_MEDIA_BUCKET|DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE|DB_PORT=$DB_PORT|ALLOWED_HOSTS=$ALLOWED_HOSTS|ADMIN_EMAIL=$ADMIN_EMAIL"
 
       - name: Debug env vars
         run: |
