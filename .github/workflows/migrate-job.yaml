@@ -8,6 +8,6 @@ spec:
       containers:
         - image: gcr.io/${{ secrets.GCP_PROJECT }}/invest-api
           command: [ "python" ]
-          args: [ "backend/manage.py", "migrate" ]
+          args: [ "manage.py", "migrate" ]
       serviceAccountName: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
       timeoutSeconds: 600
