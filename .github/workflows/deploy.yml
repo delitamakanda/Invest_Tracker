@@ -45,7 +45,7 @@ jobs:
           DB_PORT="${{ secrets.DB_PORT }}"
           ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}"
           
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/invest-api --project=${{ secrets.GCP_PROJECT }}
+          gcloud builds submit ./backend --tag gcr.io/${{ secrets.GCP_PROJECT }}/invest-api --project=${{ secrets.GCP_PROJECT }}
           gcloud run deploy invest-api \
             --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
             --region ${{ secrets.GCP_REGION }} \
@@ -117,7 +117,7 @@ jobs:
 
       - name: Build & Deploy Frontend
         run: |
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT }}/invest-ui --project=${{ secrets.GCP_PROJECT }}
+          gcloud builds submit ./frontend --tag gcr.io/${{ secrets.GCP_PROJECT }}/invest-ui --project=${{ secrets.GCP_PROJECT }}
           gcloud run deploy invest-ui \
             --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-ui \
             --region ${{ secrets.GCP_REGION }} \
