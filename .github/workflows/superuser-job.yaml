@@ -4,13 +4,12 @@ metadata:
   name: django-superuser
 spec:
   template:
-    template:
-      spec:
-        containers:
-          - image: gcr.io/${{ secrets.GCP_PROJECT }}/invest-api
-            command:
-              - python
-              - manage.py
-              - makesuperuser
-        serviceAccountName: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
-        timeoutSeconds: 600
+    spec:
+      containers:
+        - image: gcr.io/${{ secrets.GCP_PROJECT }}/invest-api
+          command:
+            - python
+            - manage.py
+            - makesuperuser
+      serviceAccountName: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+      timeoutSeconds: 600
