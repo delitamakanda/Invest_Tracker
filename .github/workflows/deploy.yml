@@ -65,7 +65,7 @@ jobs:
           --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
           --region ${{ secrets.GCP_REGION }} \
           --command "sh" \
-          --args "-c python manage.py migrate" \
+          --args= "-c python manage.py migrate" \
           --max-retries 1 \
           --task-timeout 600s \
           --wait
@@ -76,7 +76,7 @@ jobs:
           --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
           --region ${{ secrets.GCP_REGION }} \
           --command "sh" \
-          --args "-c python manage.py makesuperuser" \
+          --args= "-c python manage.py makesuperuser" \
           --max-retries 1 \
           --task-timeout 600s \
           --wait
