@@ -6,7 +6,7 @@ ENV PYTHONPATH="/app/backend"
 
 WORKDIR /app
 
-COPY / .
+COPY backend/ ./backend/
 COPY manage.py .
 
 COPY requirements.txt .
