@@ -7,9 +7,7 @@ spec:
     spec:
       containers:
         - image: gcr.io/${{ secrets.GCP_PROJECT }}/invest-api
-          command:
-            - python
-            - manage.py
-            - makesuperuser
+          command: [ "python" ]
+          args: [ "app/backend/manage.py", "makesuperuser" ]
       serviceAccountName: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
       timeoutSeconds: 600
