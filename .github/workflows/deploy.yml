@@ -61,6 +61,7 @@ jobs:
 
       - name: Run Django migrations on Cloud Run
         run: |
+          gcloud run jobs delete django-migrations --region ${{ secrets.GCP_REGION }} --quiet || true
           gcloud run jobs create django-migrations \
           --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
           --region ${{ secrets.GCP_REGION }} \
@@ -69,6 +70,20 @@ jobs:
           --max-retries 1 \
           --task-timeout 600s \
           --wait
+          --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Execute migration job
+        run: |
+          gcloud run jobs execute django-migrations --region ${{ secrets.GCP_REGION }} --quiet || true
+          gcloud run jobs create django-migrations \
+          --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
+
+      - name: Fetch logs
+        run: |
+          gcloud logging read "resource.type=cloud_run_job AND resource.labels.job_name=\"django-migrations\"" \
+          --region=${{ secrets.GCP_REGION }} \
+          --limit=50 \
+          --format="value(textPayload)"
 
       - name: Run makesuperuser script on Cloud Run
         run: |

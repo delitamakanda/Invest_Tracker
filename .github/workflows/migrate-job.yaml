@@ -12,5 +12,5 @@ spec:
               - python
               - manage.py
               - migrate
-        serviceAccountName: [SERVICE_ACCOUNT_EMAIL]
+        serviceAccountName: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
         timeoutSeconds: 600
