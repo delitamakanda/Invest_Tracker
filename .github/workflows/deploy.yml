@@ -20,81 +20,51 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          project_id: ${{secrets.GCP_PROJECT}}
+          project_id: ${{ secrets.GCP_PROJECT }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           install_components: 'beta'
 
-      - name: Debug env vars
+      - name: Build & Deploy API to Cloud Run
         run: |
-          echo "DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}"
-          echo "DEBUG: ${{ secrets.DEBUG }}"
-          echo "ALLOWED_HOSTS: 'invest-ui-946790860424.europe-west9.run.app,invest-api-946790860424.europe-west9.run.app'"
-
-      - name: Build & Deploy API
-        run: |
-          DJANGO_SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}"
-          DEBUG="${{ secrets.DEBUG }}"
-          ALLOWED_HOSTS="${{ secrets.ALLOWED_HOSTS }}"
-          DB_NAME="${{ secrets.DB_NAME }}"
-          DB_USER="${{ secrets.DB_USER }}"
-          DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
-          INSTANCE_CONNECTION_NAME="${{ secrets.INSTANCE_CONNECTION_NAME }}"
-          GCS_STATIC_BUCKET="${{ secrets.GCS_STATIC_BUCKET }}"
-          GCS_MEDIA_BUCKET="${{ secrets.GCS_MEDIA_BUCKET }}"
-          DJANGO_SETTINGS_MODULE="${{ secrets.DJANGO_SETTINGS_MODULE }}"
-          DB_PORT="${{ secrets.DB_PORT }}"
-          ADMIN_EMAIL="${{ secrets.ADMIN_EMAIL }}"
-          
           gcloud builds submit ./backend --tag gcr.io/${{ secrets.GCP_PROJECT }}/invest-api --project=${{ secrets.GCP_PROJECT }}
           gcloud run deploy invest-api \
             --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
             --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated \
             --platform managed \
-            --add-cloudsql-instances=${{secrets.INSTANCE_CONNECTION_NAME}} \
-            --set-env-vars="^|^DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY|DEBUG=$DEBUG|DB_NAME=$DB_NAME|DB_USER=$DB_USER|DB_PASSWORD=$DB_PASSWORD|INSTANCE_CONNECTION_NAME=$INSTANCE_CONNECTION_NAME|GCS_STATIC_BUCKET=$GCS_STATIC_BUCKET|GCS_MEDIA_BUCKET=$GCS_MEDIA_BUCKET|DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE|DB_PORT=$DB_PORT|ALLOWED_HOSTS=$ALLOWED_HOSTS|ADMIN_EMAIL=$ADMIN_EMAIL"
+            --add-cloudsql-instances=${{ secrets.INSTANCE_CONNECTION_NAME }} \
+            --set-env-vars="^|^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}|DEBUG=${{ secrets.DEBUG }}|DB_NAME=${{ secrets.DB_NAME }}|DB_USER=${{ secrets.DB_USER }}|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|INSTANCE_CONNECTION_NAME=${{ secrets.INSTANCE_CONNECTION_NAME }}|GCS_STATIC_BUCKET=${{ secrets.GCS_STATIC_BUCKET }}|GCS_MEDIA_BUCKET=${{ secrets.GCS_MEDIA_BUCKET }}|DJANGO_SETTINGS_MODULE=${{ secrets.DJANGO_SETTINGS_MODULE }}|DB_PORT=${{ secrets.DB_PORT }}|ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}|ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}"
 
-      - name: Debug env vars
-        run: |
-          echo "ALLOWED_HOSTS='$ALLOWED_HOSTS'"
-          echo "ALLOWED_HOSTS length: ${#ALLOWED_HOSTS}"
-
-      - name: Run Django migrations on Cloud Run
+      - name: Create Django migration job
         run: |
           gcloud run jobs delete django-migrations --region ${{ secrets.GCP_REGION }} --quiet || true
           gcloud run jobs create django-migrations \
-          --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
-          --region ${{ secrets.GCP_REGION }} \
-          --command "python" \
-          --args="manage.py migrate" \
-          --max-retries 1 \
-          --task-timeout 600s \
-          --wait
-          --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+            --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
+            --region ${{ secrets.GCP_REGION }} \
+            --command "python" \
+            --args="manage.py","migrate" \
+            --max-retries 1 \
+            --task-timeout 600s \
+            --set-env-vars="^|^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}|DEBUG=${{ secrets.DEBUG }}|DB_NAME=${{ secrets.DB_NAME }}|DB_USER=${{ secrets.DB_USER }}|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|INSTANCE_CONNECTION_NAME=${{ secrets.INSTANCE_CONNECTION_NAME }}|GCS_STATIC_BUCKET=${{ secrets.GCS_STATIC_BUCKET }}|GCS_MEDIA_BUCKET=${{ secrets.GCS_MEDIA_BUCKET }}|DJANGO_SETTINGS_MODULE=${{ secrets.DJANGO_SETTINGS_MODULE }}|DB_PORT=${{ secrets.DB_PORT }}|ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}|ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" \
+            --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
-      - name: Execute migration job
+      - name: Execute Django migration job
         run: |
-          gcloud run jobs execute django-migrations --region ${{ secrets.GCP_REGION }} --quiet || true
-          gcloud run jobs create django-migrations \
-          --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
+          gcloud run jobs execute django-migrations --region ${{ secrets.GCP_REGION }} --wait --quiet
 
-      - name: Fetch logs
+      - name: Create and Run makesuperuser job
         run: |
-          gcloud logging read "resource.type=cloud_run_job AND resource.labels.job_name=\"django-migrations\"" \
-          --region=${{ secrets.GCP_REGION }} \
-          --limit=50 \
-          --format="value(textPayload)"
-
-      - name: Run makesuperuser script on Cloud Run
-        run: |
+          gcloud run jobs delete django-superuser --region ${{ secrets.GCP_REGION }} --quiet || true
           gcloud run jobs create django-superuser \
-          --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
-          --region ${{ secrets.GCP_REGION }} \
-          --command "python" \
-          --args="manage.py makesuperuser" \
-          --max-retries 1 \
-          --task-timeout 600s \
-          --wait
+            --image gcr.io/${{ secrets.GCP_PROJECT }}/invest-api \
+            --region ${{ secrets.GCP_REGION }} \
+            --command "python" \
+            --args="manage.py","makesuperuser" \
+            --max-retries 1 \
+            --task-timeout 600s \
+            --set-env-vars="^|^DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}|DEBUG=${{ secrets.DEBUG }}|DB_NAME=${{ secrets.DB_NAME }}|DB_USER=${{ secrets.DB_USER }}|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|INSTANCE_CONNECTION_NAME=${{ secrets.INSTANCE_CONNECTION_NAME }}|GCS_STATIC_BUCKET=${{ secrets.GCS_STATIC_BUCKET }}|GCS_MEDIA_BUCKET=${{ secrets.GCS_MEDIA_BUCKET }}|DJANGO_SETTINGS_MODULE=${{ secrets.DJANGO_SETTINGS_MODULE }}|DB_PORT=${{ secrets.DB_PORT }}|ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}|ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" \
+            --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+          gcloud run jobs execute django-superuser --region ${{ secrets.GCP_REGION }} --wait --quiet
 
   deploy-frontend:
     name: Deploy Frontend
