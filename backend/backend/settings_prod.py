@@ -3,7 +3,8 @@ import os
 from .settings import *
 from decouple import config
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 # static files cloud storage
 STATIC_URL = f"https://storage.googleapis.com/{config('GCS_STATIC_BUCKET')}/static/"
