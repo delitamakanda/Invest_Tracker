@@ -18,11 +18,11 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': f"/cloudsql/{config('INSTANCE_CONNECTION_NAME')}",
-        'PORT': config('DB_PORT'),
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': f'/cloudsql/{os.environ["INSTANCE_CONNECTION_NAME"]}',
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
