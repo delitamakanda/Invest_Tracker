@@ -10,7 +10,13 @@ PORTFOLIO_ID = 1
 st.set_page_config(page_title="Portfolio Management", layout="wide")
 
 st.header("Portfolio Management")
-@st.cache_data
+
+if st.button("Refresh"):
+    st.cache_data.clear()
+    st.success("Portfolio data refreshed.")
+
+
+@st.cache_data(ttl=3600)
 def get_positions():
     response = requests.get(f"{API_URL}/portfolios/{PORTFOLIO_ID}/positions/")
     if response.status_code == 200:
@@ -18,8 +24,9 @@ def get_positions():
     else:
         st.error(f"Error fetching portfolio positions: {response.status_code} - {response.text}")
         return pd.DataFrame()
-    
-@st.cache_data
+
+
+@st.cache_data(ttl=3600)
 def get_portfolio_value():
     response = requests.get(f"{API_URL}/portfolios/{PORTFOLIO_ID}/value/")
     if response.status_code == 200:
@@ -27,7 +34,8 @@ def get_portfolio_value():
     else:
         st.error(f"Error fetching portfolio value: {response.status_code} - {response.text}")
         return 0
-    
+
+
 positions_df = get_positions()
 portfolio_value = get_portfolio_value()
 
