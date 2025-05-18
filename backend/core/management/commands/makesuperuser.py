@@ -18,4 +18,4 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.WARNING(f'Superuser {username} already exists.'))
         except Exception as e:
-            self.stderr.write(self.style.ERROR(str(e)))
+            self.stderr.write(self.style.ERROR(str(e))) # gokmf0J6Nt
