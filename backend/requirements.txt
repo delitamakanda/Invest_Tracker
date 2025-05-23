@@ -57,3 +57,4 @@ tzdata==2025.2
 urllib3==2.4.0
 yfinance==0.2.55
 gunicorn[gthread]==21.2.0
+loguru==0.7.3
